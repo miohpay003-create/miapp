@@ -286,10 +286,24 @@
     .panel { position: static; }
   }
   @media print {
-    body { background: white !important; padding: 0 !important; }
+    body { background: white !important; padding: 0 !important; margin: 0 !important; }
     .panel, .tab-row, .tip-box, .badge { display: none !important; }
-    .wrapper { grid-template-columns: 1fr !important; }
-    canvas { box-shadow: none !important; border: none !important; width: 100% !important; }
+    .wrapper { display: block !important; }
+    .preview-panel { display: none !important; }
+    #printArea {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 20px !important;
+    }
+    #printArea canvas {
+      width: 90% !important;
+      height: auto !important;
+      box-shadow: none !important;
+      border: none !important;
+      display: block !important;
+      page-break-inside: avoid !important;
+    }
   }
 </style>
 </head>
@@ -401,7 +415,7 @@
         <button class="btn btn-gray" onclick="document.getElementById('photoInput').click()">📷 Subir Foto</button>
         <button class="btn btn-sky" onclick="downloadImage()">💾 Guardar PNG</button>
       </div>
-      <button class="btn btn-green btn-full" onclick="window.print()">
+      <button class="btn btn-green btn-full" onclick="handlePrint()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         IMPRIMIR CARNET
       </button>
@@ -427,6 +441,12 @@
       <span>Sugerencia de Impresión:</span> Para obtener la mejor fidelidad, imprima en papel fotográfico mate o cartulina de 250g con configuración de "Alta Calidad".
     </div>
   </div>
+</div>
+
+<!-- ÁREA DE IMPRESIÓN (oculta en pantalla, visible al imprimir) -->
+<div id="printArea" style="display:none;">
+  <canvas id="printCanvasFront" width="800" height="620"></canvas>
+  <canvas id="printCanvasBack" width="800" height="620"></canvas>
 </div>
 
 <script>
@@ -743,6 +763,33 @@ function showStatus(msg, type) {
   el.style.cssText += ';' + colors[type];
   el.textContent = msg;
   if (type === 'ok') setTimeout(() => { if(el) el.textContent = ''; el.style.background='transparent'; }, 4000);
+}
+
+function drawToCanvas(canvasId, side) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "#0099cc";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(15, 15, w - 30, h - 30);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(10, 10, w - 20, h - 20);
+  if (side === 'front') drawFront(ctx, w, h);
+  else drawBack(ctx, w, h);
+}
+
+function handlePrint() {
+  // Renderizar ambas caras en los canvas de impresión
+  drawToCanvas('printCanvasFront', 'front');
+  drawToCanvas('printCanvasBack', 'back');
+  // Pequeña pausa para que carguen imágenes async (QR, firmas)
+  setTimeout(() => {
+    drawToCanvas('printCanvasFront', 'front');
+    drawToCanvas('printCanvasBack', 'back');
+    window.print();
+  }, 800);
 }
 
 // Buscar con Enter
