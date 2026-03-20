@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chiclayo ID Master</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020617;
+    --surface: #0f172a;
+    --surface2: #1e293b;
+    --border: #1e293b;
+    --sky: #0ea5e9;
+    --sky-dark: #0284c7;
+    --emerald: #10b981;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --input-bg: #1e293b;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  /* PANEL */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .panel-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--sky);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .panel-title svg { animation: spin 20s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SEARCH */
+  .search-bar {
+    display: flex;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 8px;
+    margin-bottom: 20px;
+  }
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+  .btn-search {
+    background: var(--sky);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .btn-search:hover { background: #38bdf8; }
+
+  /* FIELDS AREA */
+  .fields-area {
+    max-height: 52vh;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  .fields-area::-webkit-scrollbar { width: 4px; }
+  .fields-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+  .section-box {
+    background: rgba(14,165,233,0.05);
+    border: 1px solid rgba(14,165,233,0.1);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .section-label {
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--sky);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .section-label2 {
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .section-label3 {
+    font-size: 9px;
+    font-weight: 900;
+    color: #f472b6;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .input-wrap { display: flex; flex-direction: column; gap: 5px; }
+  .input-wrap label {
+    font-size: 8px;
+    font-weight: 900;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-left: 4px;
+  }
+  .input-wrap input, .input-wrap select {
+    background: var(--input-bg);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .input-wrap input:focus, .input-wrap select:focus { border-color: rgba(14,165,233,0.4); }
+  .input-full { margin-bottom: 10px; }
+
+  /* ACTIONS */
+  .actions { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn {
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-gray { background: var(--surface2); color: var(--text); border: 1px solid rgba(255,255,255,0.05); }
+  .btn-gray:hover { background: #334155; }
+  .btn-sky { background: #0284c7; color: white; box-shadow: 0 4px 15px rgba(14,165,233,0.2); }
+  .btn-sky:hover { background: var(--sky); }
+  .btn-green { background: #059669; color: white; box-shadow: 0 4px 15px rgba(16,185,129,0.2); }
+  .btn-green:hover { background: var(--emerald); }
+  .btn-full { width: 100%; }
+
+  /* PREVIEW */
+  .preview-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+  }
+  .tab-row {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+    margin-bottom: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  }
+  .tab-btn {
+    padding: 12px 40px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    color: var(--muted);
+    background: transparent;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    background: var(--sky);
+    color: white;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.4);
+    transform: scale(1.04);
+  }
+  .canvas-wrap {
+    position: relative;
+  }
+  canvas {
+    border-radius: 16px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    background: white;
+    max-width: 100%;
+    height: auto;
+    border: 4px solid var(--surface2);
+    display: block;
+  }
+  .badge {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    background: var(--emerald);
+    border-radius: 50%;
+    border: 4px solid var(--bg);
+    padding: 8px;
+    box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+    animation: bounceSubtle 3s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @keyframes bounceSubtle {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .tip-box {
+    margin-top: 32px;
+    background: rgba(15,23,42,0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 20px 24px;
+    text-align: center;
+    max-width: 520px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .tip-box span { color: var(--sky); font-weight: 700; font-style: normal; text-transform: uppercase; font-size: 11px; }
+
+  @media (max-width: 900px) {
+    .wrapper { grid-template-columns: 1fr; }
+    .panel { position: static; }
+  }
+  @media print {
+    body { background: white !important; padding: 0 !important; }
+    .panel, .tab-row, .tip-box, .badge { display: none !important; }
+    .wrapper { grid-template-columns: 1fr !important; }
+    canvas { box-shadow: none !important; border: none !important; width: 100% !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- PANEL IZQUIERDO -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+      </svg>
+      Chiclayo ID Master
+    </div>
+
+    <!-- BUSCADOR DNI -->
+    <div class="search-bar">
+      <input type="text" id="dniInput" maxlength="8" placeholder="DNI del Ciudadano" oninput="this.value=this.value.replace(/\D/g,'')"/>
+      <button class="btn-search" onclick="handleSearch()">
+        <svg id="searchIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- CAMPOS -->
+    <div class="fields-area">
+
+      <!-- QR -->
+      <div class="section-box">
+        <div class="section-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Validación QR (Verificador)
+        </div>
+        <div class="input-full input-wrap">
+          <label>Tipo de Documento</label>
+          <select id="tipoDocumento" onchange="updateField('tipoDocumento',this.value);drawCarnet()">
+            <option value="CARNET DE SALUD">CARNET DE SALUD</option>
+            <option value="RESOLUCION DE LICENCIA DE FUNCIONAMIENTO">RESOLUCION DE LICENCIA DE FUNCIONAMIENTO</option>
+            <option value="CERTIFICADO DE SALUBRIDAD">CERTIFICADO DE SALUBRIDAD</option>
+            <option value="DOCUMENTOS POR PAPELETA DE INFRACCIÓN (PIT)">DOCUMENTOS POR PAPELETA DE INFRACCIÓN (PIT)</option>
+            <option value="DOCUMENTOS POR OFICIO POLICIAL – POR PLACA">DOCUMENTOS POR OFICIO POLICIAL – POR PLACA</option>
+            <option value="CERTIFICADO DE CONFORMIDAD DE OBRA">CERTIFICADO DE CONFORMIDAD DE OBRA</option>
+            <option value="LICENCIA DE EDIFICACIÓN">LICENCIA DE EDIFICACIÓN</option>
+            <option value="TUC-TRANSPORTES">TUC-TRANSPORTES</option>
+            <option value="ACTA DE FISCALIZACIÓN DE TRANSPORTE (POR PLACA)">ACTA DE FISCALIZACIÓN DE TRANSPORTE (POR PLACA)</option>
+            <option value="AUTORIZACIÓN DE ANUNCIOS Y PUBLICIDAD EXTERIOR">AUTORIZACIÓN DE ANUNCIOS Y PUBLICIDAD EXTERIOR</option>
+            <option value="CERTIFICADO DE PARÁMETROS URBANÍSTICOS">CERTIFICADO DE PARÁMETROS URBANÍSTICOS</option>
+            <option value="NUMERACIÓN MUNICIPAL">NUMERACIÓN MUNICIPAL</option>
+            <option value="TÍTULO DE PROPIEDAD">TÍTULO DE PROPIEDAD</option>
+          </select>
+        </div>
+        <div class="input-full input-wrap">
+          <label>Número para el QR</label>
+          <input type="text" id="numVerificacion" value="2400829" oninput="updateField('numVerificacion',this.value);drawCarnet()"/>
+        </div>
+      </div>
+
+      <!-- DATOS PRINCIPALES -->
+      <div class="section-label2">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Datos Principales
+      </div>
+      <div class="grid2">
+        <div class="input-wrap"><label>Nombres</label><input type="text" id="nombre" value="VALERIA ESTEFANY" oninput="updateFieldUpper('nombre',this.value)"/></div>
+        <div class="input-wrap"><label>Apellidos</label><input type="text" id="apellidos" value="MUSAYON CORTEZ" oninput="updateFieldUpper('apellidos',this.value)"/></div>
+      </div>
+      <div class="grid2">
+        <div class="input-wrap"><label>DNI</label><input type="text" id="dni" value="70047941" oninput="updateField('dni',this.value)"/></div>
+        <div class="input-wrap"><label>N° Carnet</label><input type="text" id="carnetNo" value="2400829-2024" oninput="updateField('carnetNo',this.value)"/></div>
+      </div>
+      <div class="grid2">
+        <div class="input-wrap"><label>Categoría</label><input type="text" id="categoria" value="D" oninput="updateFieldUpper('categoria',this.value)"/></div>
+        <div class="input-wrap"><label>Vigencia</label><input type="text" id="vigencia" value="6 MESES" oninput="updateFieldUpper('vigencia',this.value)"/></div>
+      </div>
+      <div class="grid2">
+        <div class="input-wrap"><label>Fecha Nac.</label><input type="text" id="fechaNac" value="1998-05-07" oninput="updateField('fechaNac',this.value)"/></div>
+        <div class="input-wrap"><label>Fecha Reg.</label><input type="text" id="fechaReg" value="2024-03-20" oninput="updateField('fechaReg',this.value)"/></div>
+      </div>
+
+      <!-- INFORMACIÓN MÉDICA -->
+      <div class="section-label3">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Información Médica y Reverso
+      </div>
+      <div class="grid3">
+        <div class="input-wrap"><label>Sangre</label><input type="text" id="sangre" value="O+" oninput="updateFieldUpper('sangre',this.value)"/></div>
+        <div class="input-wrap"><label>HB</label><input type="text" id="hb" value="14.09" oninput="updateField('hb',this.value)"/></div>
+        <div class="input-wrap"><label>HTO</label><input type="text" id="hto" value="44" oninput="updateField('hto',this.value)"/></div>
+      </div>
+      <div class="input-full input-wrap">
+        <label>Domicilio</label><input type="text" id="domicilio" value="CA LLAUCANO # 415" oninput="updateFieldUpper('domicilio',this.value)"/>
+      </div>
+      <div class="input-full input-wrap">
+        <label>Empresa / Giro</label><input type="text" id="giroComercial" value="OVERALL STRATEGY S.A.C." oninput="updateFieldUpper('giroComercial',this.value)"/>
+      </div>
+      <div class="grid2">
+        <div class="input-wrap"><label>F. Emisión</label><input type="text" id="fechaEmision" value="2024-04-02" oninput="updateField('fechaEmision',this.value)"/></div>
+        <div class="input-wrap"><label>F. Vencimiento</label><input type="text" id="fechaVenc" value="2024-10-02" oninput="updateField('fechaVenc',this.value)"/></div>
+      </div>
+      <div class="input-full input-wrap">
+        <label>Dirección Laboral</label><input type="text" id="direccionLaboral" value="JUAN CUGLIVAN" oninput="updateFieldUpper('direccionLaboral',this.value)"/>
+      </div>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="actions">
+      <div class="btn-row">
+        <button class="btn btn-gray" onclick="document.getElementById('photoInput').click()">📷 Subir Foto</button>
+        <button class="btn btn-sky" onclick="downloadImage()">💾 Guardar PNG</button>
+      </div>
+      <button class="btn btn-green btn-full" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        IMPRIMIR CARNET
+      </button>
+      <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)"/>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div class="preview-panel">
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabFront" onclick="setTab('front')">VISTA ANVERSO</button>
+      <button class="tab-btn" id="tabBack" onclick="setTab('back')">VISTA REVERSO</button>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="carnetCanvas" width="800" height="620"></canvas>
+      <div class="badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+    </div>
+    <div class="tip-box">
+      <span>Sugerencia de Impresión:</span> Para obtener la mejor fidelidad, imprima en papel fotográfico mate o cartulina de 250g con configuración de "Alta Calidad".
+    </div>
+  </div>
+</div>
+
+<script>
+const CHICLAYO_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Escudo_de_Chiclayo.svg/1200px-Escudo_de_Chiclayo.svg.png";
+const API_URL = "https://api.azuraperu.app/servicios/reniec_free";
+const API_TOKEN = "Jrk8MslKl5QBWkdrtzOuSfg5ynCJy7NxK5a0mhgD";
+
+let activeSide = 'front';
+let fotoData = null;
+let data = {
+  carnetNo: "2400829-2024",
+  nombre: "VALERIA ESTEFANY",
+  apellidos: "MUSAYON CORTEZ",
+  fechaNac: "1998-05-07",
+  fechaReg: "2024-03-20",
+  dni: "70047941",
+  categoria: "D",
+  vigencia: "6 MESES",
+  sangre: "O+",
+  hb: "14.09",
+  hto: "44",
+  domicilio: "CA LLAUCANO # 415",
+  giroComercial: "OVERALL STRATEGY S.A.C.",
+  fechaEmision: "2024-04-02",
+  fechaVenc: "2024-10-02",
+  direccionLaboral: "JUAN CUGLIVAN",
+  tipoDocumento: "CARNET DE SALUD",
+  numVerificacion: "2400829"
+};
+
+// Preload logo image
+const logoImg = new Image();
+logoImg.crossOrigin = "anonymous";
+logoImg.src = CHICLAYO_LOGO_URL;
+logoImg.onload = () => drawCarnet();
+
+// QR cache
+let qrImg = null;
+let qrLastUrl = "";
+
+function getOrLoadQR(url, callback) {
+  if (qrLastUrl === url && qrImg && qrImg.complete && qrImg.naturalWidth > 0) {
+    callback(qrImg);
+    return;
+  }
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    qrImg = img;
+    qrLastUrl = url;
+    callback(img);
+  };
+  img.src = url;
+}
+
+function updateField(key, val) {
+  data[key] = val;
+  if (key === 'tipoDocumento' || key === 'numVerificacion') qrLastUrl = "";
+}
+function updateFieldUpper(key, val) {
+  const upper = val.toUpperCase();
+  data[key] = upper;
+  const el = document.getElementById(key);
+  if (el) el.value = upper;
+  drawCarnet();
+}
+
+function getVerificationUrl() {
+  const base = "https://munichiclayogobpverificar.github.io/verificar_documento-verificador_otros-/";
+  return `${base}?tipo=${encodeURIComponent(data.tipoDocumento)}&num=${encodeURIComponent(data.numVerificacion)}`;
+}
+
+function setTab(side) {
+  activeSide = side;
+  document.getElementById('tabFront').classList.toggle('active', side === 'front');
+  document.getElementById('tabBack').classList.toggle('active', side === 'back');
+  drawCarnet();
+}
+
+function drawCarnet() {
+  const canvas = document.getElementById('carnetCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = "#0099cc";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(15, 15, w - 30, h - 30);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(10, 10, w - 20, h - 20);
+
+  if (activeSide === 'front') drawFront(ctx, w, h);
+  else drawBack(ctx, w, h);
+}
+
+function drawFront(ctx, w, h) {
+  ctx.fillStyle = "#333333";
+  ctx.textAlign = "left";
+  ctx.font = "bold 26px Arial Narrow, Arial, sans-serif";
+  ctx.fillText("Municipalidad Provincial de Chiclayo", 135, 80);
+  ctx.font = "bold 22px Arial Narrow, Arial, sans-serif";
+  ctx.fillText("Subgerencia de Sanidad y Vigilancia Sanitaria", 135, 110);
+
+  ctx.textAlign = "center";
+  ctx.font = "900 42px Arial Black, Arial, sans-serif";
+  ctx.fillStyle = "#444444";
+  ctx.fillText("CARNET SANITARIO", w / 2, 195);
+
+  ctx.font = "bold 26px Arial";
+  ctx.fillText(`CATEGORIA "${data.categoria}"`, w / 2, 240);
+  ctx.font = "bold 24px Arial";
+  ctx.fillText(`VIGENCIA ${data.vigencia}:`, w / 2, 285);
+
+  ctx.textAlign = "left";
+  const startX = 280, startY = 350, lineSpacing = 48;
+
+  function renderField(label, value, y) {
+    ctx.font = "bold 24px Arial";
+    ctx.fillStyle = "#555";
+    ctx.fillText(label, startX, y);
+    ctx.font = "bold 26px Arial";
+    ctx.fillStyle = "#000";
+    ctx.fillText(value || "", startX + 165, y);
+  }
+
+  renderField("CARNET N°:", data.carnetNo, startY);
+  renderField("Nombre:", data.nombre, startY + lineSpacing);
+  renderField("Apellidos:", data.apellidos, startY + lineSpacing * 2);
+  renderField("Fecha Nac.:", data.fechaNac, startY + lineSpacing * 3);
+  renderField("Fecha Reg.:", data.fechaReg, startY + lineSpacing * 4);
+
+  ctx.strokeStyle = "#0099cc";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(45, 315, 200, 250);
+  ctx.fillStyle = "#333";
+  ctx.font = "bold 28px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(data.dni, 145, 600);
+
+  // Logo
+  if (logoImg.complete && logoImg.naturalWidth > 0) {
+    ctx.drawImage(logoImg, 45, 45, 75, 95);
+  }
+
+  // QR — esquina inferior derecha, fuera del área de texto
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(getVerificationUrl())}`;
+  const qrSize = 150;
+  const qrX = w - qrSize - 25;  // 25px del borde derecho
+  const qrY = h - qrSize - 25;  // 25px del borde inferior
+  if (qrImg && qrLastUrl === qrUrl && qrImg.complete && qrImg.naturalWidth > 0) {
+    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+  } else {
+    getOrLoadQR(qrUrl, () => drawCarnet());
+  }
+
+  // Foto
+  if (fotoData) {
+    const photoImg = new Image();
+    photoImg.src = fotoData;
+    photoImg.onload = () => { ctx.drawImage(photoImg, 47, 317, 196, 246); };
+  }
+}
+
+function drawBack(ctx, w, h) {
+  ctx.textAlign = "center";
+  ctx.font = "bold 32px Arial";
+  ctx.fillStyle = "#333";
+  ctx.fillText("DATOS PERSONALES", w / 2, 60);
+  ctx.strokeStyle = "#aaa";
+  ctx.lineWidth = 1;
+
+  function drawLineData(label, value, x, y, width, labelOffset) {
+    ctx.textAlign = "left";
+    ctx.font = "bold 20px Arial";
+    ctx.fillStyle = "#333";
+    ctx.fillText(label, x, y);
+    ctx.font = "22px Arial";
+    ctx.fillText(value || "", x + labelOffset, y);
+    ctx.beginPath(); ctx.moveTo(x, y + 5); ctx.lineTo(x + width, y + 5); ctx.stroke();
+  }
+
+  drawLineData("Factor y Gru. Sanguíneo:", data.sangre, 40, 115, 360, 250);
+  drawLineData("HB:", data.hb, 420, 115, 160, 45);
+  drawLineData("HTO:", data.hto, 600, 115, 160, 60);
+  drawLineData("Domicilio:", data.domicilio, 40, 175, 720, 110);
+  drawLineData("Giro/Nombre Comercial:", data.giroComercial, 40, 235, 720, 250);
+  drawLineData("Fecha Emisión:", data.fechaEmision, 40, 295, 340, 160);
+  drawLineData("Fecha Venc.:", data.fechaVenc, 410, 295, 350, 150);
+  drawLineData("Dirección Laboral:", data.direccionLaboral, 40, 355, 720, 190);
+
+  ctx.textAlign = "center";
+  ctx.font = "bold 16px Arial";
+  ctx.beginPath(); ctx.moveTo(80, 540); ctx.lineTo(340, 540); ctx.stroke();
+  ctx.fillText("JEFE DPTO. MEDICO", 210, 565);
+  ctx.beginPath(); ctx.moveTo(w - 340, 540); ctx.lineTo(w - 80, 540); ctx.stroke();
+  ctx.fillText("JEFE LABORATORISTA", w - 210, 565);
+}
+
+async function handleSearch() {
+  const dni = document.getElementById('dniInput').value;
+  if (dni.length !== 8) return;
+  const icon = document.getElementById('searchIcon');
+  icon.innerHTML = `<circle cx="12" cy="12" r="10" stroke="white" stroke-width="2.5" fill="none" stroke-dasharray="30" stroke-dashoffset="15" style="animation:spinIcon 0.8s linear infinite"/>`;
+  const style = document.createElement('style');
+  style.textContent = '@keyframes spinIcon { to { stroke-dashoffset: -30; } }';
+  document.head.appendChild(style);
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': API_TOKEN },
+      body: JSON.stringify({ documento: dni })
+    });
+    const res = await resp.json();
+    if (res.status === "success" && res.listaAni) {
+      const p = res.listaAni;
+      const nombre = p.nombres.toUpperCase();
+      const apellidos = `${p.apellido_paterno} ${p.apellido_materno}`.toUpperCase();
+      data.nombre = nombre; data.apellidos = apellidos;
+      data.dni = dni; data.numVerificacion = dni;
+      document.getElementById('nombre').value = nombre;
+      document.getElementById('apellidos').value = apellidos;
+      document.getElementById('dni').value = dni;
+      document.getElementById('numVerificacion').value = dni;
+      drawCarnet();
+    }
+  } catch(e) { console.error(e); }
+  icon.innerHTML = `<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>`;
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => { fotoData = ev.target.result; drawCarnet(); };
+  reader.readAsDataURL(file);
+}
+
+function downloadImage() {
+  const canvas = document.getElementById('carnetCanvas');
+  const link = document.createElement('a');
+  link.download = `carnet_${data.dni}_${activeSide}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// Initial draw
+drawCarnet();
+setTimeout(drawCarnet, 600);
+</script>
+</body>
+</html>
