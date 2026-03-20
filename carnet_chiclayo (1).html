@@ -537,11 +537,12 @@ function drawFront(ctx, w, h) {
   ctx.fillStyle = "#444444";
   ctx.fillText("CARNET SANITARIO", 135, 195);
 
+  ctx.textAlign = "center";
   ctx.font = "bold 26px Arial";
   ctx.fillStyle = "#444444";
-  ctx.fillText(`CATEGORIA "${data.categoria}"`, 135, 240);
+  ctx.fillText(`CATEGORIA "${data.categoria}"`, w / 2, 240);
   ctx.font = "bold 24px Arial";
-  ctx.fillText(`VIGENCIA ${data.vigencia}:`, 135, 285);
+  ctx.fillText(`VIGENCIA ${data.vigencia}:`, w / 2, 285);
 
   ctx.textAlign = "left";
   const startX = 280, startY = 350, lineSpacing = 48;
