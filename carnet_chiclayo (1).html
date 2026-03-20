@@ -358,16 +358,16 @@
         <div class="input-wrap"><label>Apellidos</label><input type="text" id="apellidos" value="MUSAYON CORTEZ" oninput="updateFieldUpper('apellidos',this.value)"/></div>
       </div>
       <div class="grid2">
-        <div class="input-wrap"><label>DNI</label><input type="text" id="dni" value="70047941" oninput="updateField('dni',this.value)"/></div>
-        <div class="input-wrap"><label>N° Carnet</label><input type="text" id="carnetNo" value="2400829-2024" oninput="updateField('carnetNo',this.value)"/></div>
+        <div class="input-wrap"><label>DNI</label><input type="text" id="dni" value="70047941" oninput="updateField('dni',this.value);drawCarnet()"/></div>
+        <div class="input-wrap"><label>N° Carnet</label><input type="text" id="carnetNo" value="2400829-2024" oninput="updateField('carnetNo',this.value);drawCarnet()"/></div>
       </div>
       <div class="grid2">
         <div class="input-wrap"><label>Categoría</label><input type="text" id="categoria" value="D" oninput="updateFieldUpper('categoria',this.value)"/></div>
         <div class="input-wrap"><label>Vigencia</label><input type="text" id="vigencia" value="6 MESES" oninput="updateFieldUpper('vigencia',this.value)"/></div>
       </div>
       <div class="grid2">
-        <div class="input-wrap"><label>Fecha Nac.</label><input type="text" id="fechaNac" value="1998-05-07" oninput="updateField('fechaNac',this.value)"/></div>
-        <div class="input-wrap"><label>Fecha Reg.</label><input type="text" id="fechaReg" value="2024-03-20" oninput="updateField('fechaReg',this.value)"/></div>
+        <div class="input-wrap"><label>Fecha Nac.</label><input type="text" id="fechaNac" value="1998-05-07" oninput="updateField('fechaNac',this.value);drawCarnet()"/></div>
+        <div class="input-wrap"><label>Fecha Reg.</label><input type="text" id="fechaReg" value="2024-03-20" oninput="updateField('fechaReg',this.value);drawCarnet()"/></div>
       </div>
 
       <!-- INFORMACIÓN MÉDICA -->
@@ -377,8 +377,8 @@
       </div>
       <div class="grid3">
         <div class="input-wrap"><label>Sangre</label><input type="text" id="sangre" value="O+" oninput="updateFieldUpper('sangre',this.value)"/></div>
-        <div class="input-wrap"><label>HB</label><input type="text" id="hb" value="14.09" oninput="updateField('hb',this.value)"/></div>
-        <div class="input-wrap"><label>HTO</label><input type="text" id="hto" value="44" oninput="updateField('hto',this.value)"/></div>
+        <div class="input-wrap"><label>HB</label><input type="text" id="hb" value="14.09" oninput="updateField('hb',this.value);drawCarnet()"/></div>
+        <div class="input-wrap"><label>HTO</label><input type="text" id="hto" value="44" oninput="updateField('hto',this.value);drawCarnet()"/></div>
       </div>
       <div class="input-full input-wrap">
         <label>Domicilio</label><input type="text" id="domicilio" value="CA LLAUCANO # 415" oninput="updateFieldUpper('domicilio',this.value)"/>
@@ -387,8 +387,8 @@
         <label>Empresa / Giro</label><input type="text" id="giroComercial" value="OVERALL STRATEGY S.A.C." oninput="updateFieldUpper('giroComercial',this.value)"/>
       </div>
       <div class="grid2">
-        <div class="input-wrap"><label>F. Emisión</label><input type="text" id="fechaEmision" value="2024-04-02" oninput="updateField('fechaEmision',this.value)"/></div>
-        <div class="input-wrap"><label>F. Vencimiento</label><input type="text" id="fechaVenc" value="2024-10-02" oninput="updateField('fechaVenc',this.value)"/></div>
+        <div class="input-wrap"><label>F. Emisión</label><input type="text" id="fechaEmision" value="2024-04-02" oninput="updateField('fechaEmision',this.value);drawCarnet()"/></div>
+        <div class="input-wrap"><label>F. Vencimiento</label><input type="text" id="fechaVenc" value="2024-10-02" oninput="updateField('fechaVenc',this.value);drawCarnet()"/></div>
       </div>
       <div class="input-full input-wrap">
         <label>Dirección Laboral</label><input type="text" id="direccionLaboral" value="JUAN CUGLIVAN" oninput="updateFieldUpper('direccionLaboral',this.value)"/>
@@ -430,7 +430,7 @@
 </div>
 
 <script>
-const CHICLAYO_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Escudo_de_Chiclayo.svg/1200px-Escudo_de_Chiclayo.svg.png";
+const CHICLAYO_LOGO_URL = "Escudo_de_Chiclayo.png";
 const API_URL = "https://api.azuraperu.app/servicios/reniec_free";
 const API_TOKEN = "Jrk8MslKl5QBWkdrtzOuSfg5ynCJy7NxK5a0mhgD";
 
@@ -485,6 +485,7 @@ function getOrLoadQR(url, callback) {
 function updateField(key, val) {
   data[key] = val;
   if (key === 'tipoDocumento' || key === 'numVerificacion') qrLastUrl = "";
+  drawCarnet();
 }
 function updateFieldUpper(key, val) {
   const upper = val.toUpperCase();
