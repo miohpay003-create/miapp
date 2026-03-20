@@ -641,50 +641,60 @@ async function handleSearch() {
   icon.innerHTML = `<circle cx="12" cy="12" r="10" stroke="white" stroke-width="2.5" fill="none" stroke-dasharray="30" stroke-dashoffset="15" style="animation:spinIcon 0.8s linear infinite"/>`;
   showStatus('🔍 Buscando...', 'info');
 
-  try {
-    const resp = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': API_TOKEN
-      },
-      body: JSON.stringify({ documento: dni })
-    });
+  const body = JSON.stringify({ documento: dni });
+  const headers = { 'Content-Type': 'application/json', 'X-Auth-Token': API_TOKEN };
 
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const res = await resp.json();
-    console.log('Respuesta API:', res);
+  // Intentar primero directo, luego con proxy CORS
+  const attempts = [
+    () => fetch(API_URL, { method: 'POST', headers, body }),
+    () => fetch(`https://corsproxy.io/?${encodeURIComponent(API_URL)}`, { method: 'POST', headers, body }),
+    () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(API_URL)}`, { method: 'POST', headers, body }),
+  ];
 
-    // Soporte para distintas estructuras de respuesta
-    let p = null;
-    if (res.status === "success" && res.listaAni) p = res.listaAni;
-    else if (res.data) p = res.data;
-    else if (res.nombres) p = res;
-
-    if (p) {
-      const nombre = (p.nombres || p.nombre || '').toUpperCase();
-      const apellidos = `${p.apellido_paterno || p.apellidoPaterno || ''} ${p.apellido_materno || p.apellidoMaterno || ''}`.trim().toUpperCase();
-
-      data.nombre = nombre;
-      data.apellidos = apellidos;
-      data.dni = dni;
-      data.numVerificacion = dni;
-
-      document.getElementById('nombre').value = nombre;
-      document.getElementById('apellidos').value = apellidos;
-      document.getElementById('dni').value = dni;
-      document.getElementById('numVerificacion').value = dni;
-
-      qrLastUrl = ""; // forzar recarga del QR
-      drawCarnet();
-      showStatus(`✅ Datos cargados: ${nombre}`, 'ok');
-    } else {
-      showStatus('❌ DNI no encontrado en RENIEC', 'error');
-      console.warn('Respuesta sin datos:', res);
+  let res = null;
+  for (const attempt of attempts) {
+    try {
+      const resp = await attempt();
+      if (!resp.ok) continue;
+      res = await resp.json();
+      console.log('Respuesta API:', res);
+      break;
+    } catch(e) {
+      console.warn('Intento fallido:', e.message);
     }
-  } catch(e) {
-    console.error('Error API:', e);
-    showStatus(`❌ Error: ${e.message}. Verifica conexión o CORS.`, 'error');
+  }
+
+  if (!res) {
+    showStatus('❌ No se pudo conectar a RENIEC. Intenta desde otra red.', 'error');
+    icon.innerHTML = `<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>`;
+    return;
+  }
+
+  // Soporte para distintas estructuras de respuesta
+  let p = null;
+  if (res.status === "success" && res.listaAni) p = res.listaAni;
+  else if (res.data) p = res.data;
+  else if (res.nombres) p = res;
+
+  if (p) {
+    const nombre = (p.nombres || p.nombre || '').toUpperCase();
+    const apellidos = `${p.apellido_paterno || p.apellidoPaterno || ''} ${p.apellido_materno || p.apellidoMaterno || ''}`.trim().toUpperCase();
+
+    data.nombre = nombre;
+    data.apellidos = apellidos;
+    data.dni = dni;
+    data.numVerificacion = dni;
+
+    document.getElementById('nombre').value = nombre;
+    document.getElementById('apellidos').value = apellidos;
+    document.getElementById('dni').value = dni;
+    document.getElementById('numVerificacion').value = dni;
+
+    qrLastUrl = "";
+    drawCarnet();
+    showStatus(`✅ ${nombre} ${apellidos}`, 'ok');
+  } else {
+    showStatus('❌ DNI no encontrado en RENIEC', 'error');
   }
 
   icon.innerHTML = `<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>`;
