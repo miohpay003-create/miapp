@@ -630,35 +630,88 @@ function drawBack(ctx, w, h) {
 }
 
 async function handleSearch() {
-  const dni = document.getElementById('dniInput').value;
-  if (dni.length !== 8) return;
+  const dni = document.getElementById('dniInput').value.trim();
+  if (dni.length !== 8) {
+    showStatus('⚠️ Ingresa exactamente 8 dígitos', 'warn');
+    return;
+  }
+
   const icon = document.getElementById('searchIcon');
   icon.innerHTML = `<circle cx="12" cy="12" r="10" stroke="white" stroke-width="2.5" fill="none" stroke-dasharray="30" stroke-dashoffset="15" style="animation:spinIcon 0.8s linear infinite"/>`;
-  const style = document.createElement('style');
-  style.textContent = '@keyframes spinIcon { to { stroke-dashoffset: -30; } }';
-  document.head.appendChild(style);
+  showStatus('🔍 Buscando...', 'info');
+
   try {
     const resp = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': API_TOKEN },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': API_TOKEN
+      },
       body: JSON.stringify({ documento: dni })
     });
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const res = await resp.json();
-    if (res.status === "success" && res.listaAni) {
-      const p = res.listaAni;
-      const nombre = p.nombres.toUpperCase();
-      const apellidos = `${p.apellido_paterno} ${p.apellido_materno}`.toUpperCase();
-      data.nombre = nombre; data.apellidos = apellidos;
-      data.dni = dni; data.numVerificacion = dni;
+    console.log('Respuesta API:', res);
+
+    // Soporte para distintas estructuras de respuesta
+    let p = null;
+    if (res.status === "success" && res.listaAni) p = res.listaAni;
+    else if (res.data) p = res.data;
+    else if (res.nombres) p = res;
+
+    if (p) {
+      const nombre = (p.nombres || p.nombre || '').toUpperCase();
+      const apellidos = `${p.apellido_paterno || p.apellidoPaterno || ''} ${p.apellido_materno || p.apellidoMaterno || ''}`.trim().toUpperCase();
+
+      data.nombre = nombre;
+      data.apellidos = apellidos;
+      data.dni = dni;
+      data.numVerificacion = dni;
+
       document.getElementById('nombre').value = nombre;
       document.getElementById('apellidos').value = apellidos;
       document.getElementById('dni').value = dni;
       document.getElementById('numVerificacion').value = dni;
+
+      qrLastUrl = ""; // forzar recarga del QR
       drawCarnet();
+      showStatus(`✅ Datos cargados: ${nombre}`, 'ok');
+    } else {
+      showStatus('❌ DNI no encontrado en RENIEC', 'error');
+      console.warn('Respuesta sin datos:', res);
     }
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error('Error API:', e);
+    showStatus(`❌ Error: ${e.message}. Verifica conexión o CORS.`, 'error');
+  }
+
   icon.innerHTML = `<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>`;
 }
+
+function showStatus(msg, type) {
+  let el = document.getElementById('searchStatus');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'searchStatus';
+    el.style.cssText = 'margin-top:8px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;transition:all 0.3s';
+    document.querySelector('.search-bar').after(el);
+  }
+  const colors = {
+    ok:    'background:#064e3b;color:#6ee7b7;border:1px solid #065f46',
+    error: 'background:#450a0a;color:#fca5a5;border:1px solid #7f1d1d',
+    warn:  'background:#451a03;color:#fcd34d;border:1px solid #78350f',
+    info:  'background:#0c1a2e;color:#7dd3fc;border:1px solid #0e4166'
+  };
+  el.style.cssText += ';' + colors[type];
+  el.textContent = msg;
+  if (type === 'ok') setTimeout(() => { if(el) el.textContent = ''; el.style.background='transparent'; }, 4000);
+}
+
+// Buscar con Enter
+document.getElementById('dniInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleSearch();
+});
 
 function handlePhoto(e) {
   const file = e.target.files[0];
