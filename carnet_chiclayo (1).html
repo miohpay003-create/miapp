@@ -577,9 +577,9 @@ function drawFront(ctx, w, h) {
 
   // QR — esquina superior derecha, alineado con título CARNET SANITARIO
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(getVerificationUrl())}`;
-  const qrSize = 130;
-  const qrX = w - qrSize - 25;  // pegado al borde derecho
-  const qrY = 155;               // altura del título
+  const qrSize = 120;
+  const qrX = w - qrSize - 60;  // margen derecho generoso
+  const qrY = 160;               // altura del título
   if (qrImg && qrLastUrl === qrUrl && qrImg.complete && qrImg.naturalWidth > 0) {
     ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
   } else {
