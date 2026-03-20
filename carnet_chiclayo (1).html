@@ -546,12 +546,13 @@ function drawFront(ctx, w, h) {
   const startX = 280, startY = 350, lineSpacing = 48;
 
   function renderField(label, value, y) {
-    ctx.font = "bold 24px Arial";
+    ctx.font = "bold 22px Arial";
     ctx.fillStyle = "#555";
     ctx.fillText(label, startX, y);
-    ctx.font = "bold 26px Arial";
+    ctx.font = "bold 24px Arial";
     ctx.fillStyle = "#000";
-    ctx.fillText(value || "", startX + 165, y);
+    // truncar valor si es muy largo para no solapar el QR
+    ctx.fillText(value || "", startX + 155, y);
   }
 
   renderField("CARNET N°:", data.carnetNo, startY);
@@ -573,11 +574,11 @@ function drawFront(ctx, w, h) {
     ctx.drawImage(logoImg, 45, 45, 75, 95);
   }
 
-  // QR — esquina inferior derecha, fuera del área de texto
+  // QR — alineado con los campos de datos, lado derecho
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(getVerificationUrl())}`;
-  const qrSize = 150;
-  const qrX = w - qrSize - 25;  // 25px del borde derecho
-  const qrY = h - qrSize - 25;  // 25px del borde inferior
+  const qrSize = 130;
+  const qrX = w - qrSize - 30;  // 30px del borde derecho
+  const qrY = 350;               // misma altura que los campos de datos
   if (qrImg && qrLastUrl === qrUrl && qrImg.complete && qrImg.naturalWidth > 0) {
     ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
   } else {
