@@ -463,6 +463,15 @@ logoImg.crossOrigin = "anonymous";
 logoImg.src = CHICLAYO_LOGO_URL;
 logoImg.onload = () => drawCarnet();
 
+// Preload firmas
+const firma1Img = new Image();
+firma1Img.src = "firma1.png";
+firma1Img.onload = () => drawCarnet();
+
+const firma2Img = new Image();
+firma2Img.src = "firma2.png";
+firma2Img.onload = () => drawCarnet();
+
 // QR cache
 let qrImg = null;
 let qrLastUrl = "";
@@ -625,10 +634,26 @@ function drawBack(ctx, w, h) {
 
   ctx.textAlign = "center";
   ctx.font = "bold 16px Arial";
+
+  // Línea y texto JEFE DPTO. MEDICO (izquierda)
   ctx.beginPath(); ctx.moveTo(80, 540); ctx.lineTo(340, 540); ctx.stroke();
   ctx.fillText("JEFE DPTO. MEDICO", 210, 565);
+
+  // Línea y texto JEFE LABORATORISTA (derecha)
   ctx.beginPath(); ctx.moveTo(w - 340, 540); ctx.lineTo(w - 80, 540); ctx.stroke();
   ctx.fillText("JEFE LABORATORISTA", w - 210, 565);
+
+  // Firma 1 — centrada sobre línea izquierda (80-340), encima de la línea
+  const f1 = firma1Img;
+  if (f1.complete && f1.naturalWidth > 0) {
+    ctx.drawImage(f1, 90, 460, 230, 75);
+  }
+
+  // Firma 2 — centrada sobre línea derecha (w-340 a w-80), encima de la línea
+  const f2 = firma2Img;
+  if (f2.complete && f2.naturalWidth > 0) {
+    ctx.drawImage(f2, w - 340, 460, 230, 75);
+  }
 }
 
 async function handleSearch() {
