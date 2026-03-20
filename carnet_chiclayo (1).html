@@ -532,15 +532,16 @@ function drawFront(ctx, w, h) {
   ctx.font = "bold 22px Arial Narrow, Arial, sans-serif";
   ctx.fillText("Subgerencia de Sanidad y Vigilancia Sanitaria", 135, 110);
 
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
   ctx.font = "900 42px Arial Black, Arial, sans-serif";
   ctx.fillStyle = "#444444";
-  ctx.fillText("CARNET SANITARIO", w / 2, 195);
+  ctx.fillText("CARNET SANITARIO", 135, 195);
 
   ctx.font = "bold 26px Arial";
-  ctx.fillText(`CATEGORIA "${data.categoria}"`, w / 2, 240);
+  ctx.fillStyle = "#444444";
+  ctx.fillText(`CATEGORIA "${data.categoria}"`, 135, 240);
   ctx.font = "bold 24px Arial";
-  ctx.fillText(`VIGENCIA ${data.vigencia}:`, w / 2, 285);
+  ctx.fillText(`VIGENCIA ${data.vigencia}:`, 135, 285);
 
   ctx.textAlign = "left";
   const startX = 280, startY = 350, lineSpacing = 48;
@@ -574,11 +575,11 @@ function drawFront(ctx, w, h) {
     ctx.drawImage(logoImg, 45, 45, 75, 95);
   }
 
-  // QR — alineado con los campos de datos, lado derecho
+  // QR — esquina superior derecha, alineado con título CARNET SANITARIO
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(getVerificationUrl())}`;
   const qrSize = 130;
-  const qrX = w - qrSize - 30;  // 30px del borde derecho
-  const qrY = 350;               // misma altura que los campos de datos
+  const qrX = w - qrSize - 25;  // pegado al borde derecho
+  const qrY = 155;               // altura del título
   if (qrImg && qrLastUrl === qrUrl && qrImg.complete && qrImg.naturalWidth > 0) {
     ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
   } else {
