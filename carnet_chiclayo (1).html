@@ -643,16 +643,16 @@ function drawBack(ctx, w, h) {
   ctx.beginPath(); ctx.moveTo(w - 340, 540); ctx.lineTo(w - 80, 540); ctx.stroke();
   ctx.fillText("JEFE LABORATORISTA", w - 210, 565);
 
-  // Firma 1 — centrada sobre línea izquierda (80-340), encima de la línea
+  // Firma 1 — JEFE DPTO. MEDICO
   const f1 = firma1Img;
   if (f1.complete && f1.naturalWidth > 0) {
-    ctx.drawImage(f1, 90, 460, 230, 75);
+    ctx.drawImage(f1, 70, 440, 280, 95);
   }
 
-  // Firma 2 — centrada sobre línea derecha (w-340 a w-80), encima de la línea
+  // Firma 2 — JEFE LABORATORISTA
   const f2 = firma2Img;
   if (f2.complete && f2.naturalWidth > 0) {
-    ctx.drawImage(f2, w - 340, 460, 230, 75);
+    ctx.drawImage(f2, w - 360, 440, 280, 95);
   }
 }
 
